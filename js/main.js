@@ -13,6 +13,23 @@ const showSecondSentence = 800;
 const fadeOutIntro = 4000;
 const hideIntro = 5000;
 let hasHeaderAppeared = false;
+const scrollKeys = new Set(["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "]);
+
+const preventIntroScroll = (event) => {
+  if (!document.body.classList.contains("is-intro-active")) {
+    return;
+  }
+
+  if (event.cancelable) {
+    event.preventDefault();
+  }
+};
+
+const preventIntroKeyboardScroll = (event) => {
+  if (scrollKeys.has(event.key)) {
+    preventIntroScroll(event);
+  }
+};
 
 window.addEventListener("DOMContentLoaded", () => {
   window.setTimeout(() => {
@@ -30,6 +47,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   window.setTimeout(() => {
     intro.classList.add("is-hidden");
+    document.body.classList.remove("is-intro-active");
   }, hideIntro);
 });
 
@@ -44,6 +62,25 @@ const setActiveNav = (sectionId) => {
   navLinks.forEach((link) => {
     link.classList.toggle("is-active", link.dataset.section === sectionId);
   });
+};
+
+const updateActiveSection = () => {
+  const viewportHeight = window.innerHeight;
+  let activeSectionId = "";
+
+  document.querySelectorAll(".page-section[id]").forEach((section) => {
+    const rect = section.getBoundingClientRect();
+    const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+    const viewportCoverage = Math.max(0, visibleHeight) / viewportHeight;
+
+    if (viewportCoverage >= 0.75) {
+      activeSectionId = section.id;
+    }
+  });
+
+  if (activeSectionId) {
+    setActiveNav(activeSectionId);
+  }
 };
 
 menuToggle.addEventListener("click", () => {
@@ -80,21 +117,12 @@ const brandObserver = new IntersectionObserver((entries) => {
 
 brandObserver.observe(brandSection);
 
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      setActiveNav(entry.target.id);
-    }
-  });
-}, {
-  rootMargin: "-45% 0px -45% 0px",
-  threshold: 0,
-});
-
-document.querySelectorAll(".page-section[id]").forEach((section) => {
-  sectionObserver.observe(section);
-});
-
+window.addEventListener("wheel", preventIntroScroll, { passive: false });
+window.addEventListener("touchmove", preventIntroScroll, { passive: false });
+window.addEventListener("keydown", preventIntroKeyboardScroll);
 window.addEventListener("scroll", updateHeaderState, { passive: true });
+window.addEventListener("scroll", updateActiveSection, { passive: true });
 window.addEventListener("resize", updateHeaderState);
+window.addEventListener("resize", updateActiveSection);
 updateHeaderState();
+updateActiveSection();

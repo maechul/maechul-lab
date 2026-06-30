@@ -11,6 +11,7 @@
   --text-sub: rgba(255, 255, 255, 0.72);
   --primary: #5FA8FF;
   --primary-hover: #7BBAFF;
+  --container: 1400px;
 }
 
 html,
@@ -23,6 +24,11 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: Arial, "Noto Sans KR", sans-serif;
+}
+
+body.is-intro-active {
+  overflow: hidden;
+  touch-action: none;
 }
 
 a {
@@ -45,12 +51,8 @@ button:focus-visible {
   top: 0;
   left: 0;
   z-index: 9;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   height: 68px;
-  padding: 0 20px;
   border-bottom: 1px solid var(--line);
   background: rgba(15, 17, 21, 0.88);
   opacity: 0;
@@ -59,6 +61,15 @@ button:focus-visible {
   transition:
     opacity 400ms ease,
     transform 400ms ease;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100% - 40px, var(--container));
+  height: 100%;
+  margin: 0 auto;
 }
 
 .site-header.is-visible {
@@ -102,7 +113,7 @@ button:focus-visible {
   display: none;
   flex-direction: column;
   width: 100%;
-  padding: 10px 20px 18px;
+  padding: 10px max(20px, calc((100vw - var(--container)) / 2)) 18px;
   background: rgba(15, 17, 21, 0.96);
 }
 
@@ -299,7 +310,7 @@ button:focus-visible {
 
 .brand-section {
   min-height: 100vh;
-  padding: 72px 20px 96px;
+  padding: 64px 20px 96px;
   background: var(--surface);
 }
 
@@ -307,8 +318,8 @@ button:focus-visible {
   display: grid;
   gap: 38px;
   align-items: center;
-  width: min(100%, 1280px);
-  min-height: calc(100vh - 168px);
+  width: min(100%, var(--container));
+  min-height: calc(100vh - 160px);
   margin: 0 auto;
 }
 
@@ -401,7 +412,7 @@ button:focus-visible {
 }
 
 .brand-section__button:hover span:last-child {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 .reveal-from-left,
@@ -483,7 +494,10 @@ button:focus-visible {
 
   .site-header {
     height: 76px;
-    padding: 0 32px;
+  }
+
+  .site-header__inner {
+    width: min(100% - 64px, var(--container));
   }
 
   .site-header__toggle {
@@ -510,11 +524,11 @@ button:focus-visible {
   }
 
   .brand-section {
-    padding: 84px 32px 108px;
+    padding: 72px 32px 108px;
   }
 
   .brand-section__inner {
-    min-height: calc(100vh - 192px);
+    min-height: calc(100vh - 180px);
   }
 
   .brand-section__title {
@@ -538,12 +552,12 @@ button:focus-visible {
   }
 
   .brand-section__inner {
-    grid-template-columns: minmax(0, 1.2fr) minmax(420px, 0.98fr);
-    gap: 56px;
+    grid-template-columns: minmax(0, 1.38fr) minmax(420px, 1fr);
+    gap: 52px;
   }
 
   .brand-section__title {
-    font-size: 54px;
+    font-size: 52px;
   }
 }
 
@@ -557,12 +571,12 @@ button:focus-visible {
   }
 
   .brand-section__inner {
-    grid-template-columns: minmax(0, 1.22fr) minmax(450px, 1fr);
-    gap: 64px;
+    grid-template-columns: minmax(0, 1.38fr) minmax(480px, 1fr);
+    gap: 60px;
   }
 
   .brand-section__title {
-    font-size: 58px;
+    font-size: 56px;
   }
 }
 
