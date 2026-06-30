@@ -12,6 +12,7 @@ const showFirstSentence = 200;
 const showSecondSentence = 800;
 const fadeOutIntro = 4000;
 const hideIntro = 5000;
+let hasHeaderAppeared = false;
 
 window.addEventListener("DOMContentLoaded", () => {
   window.setTimeout(() => {
@@ -33,13 +34,9 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 const updateHeaderState = () => {
-  const heroBottom = hero.getBoundingClientRect().bottom;
-
-  if (heroBottom <= 0) {
+  if (window.scrollY > 0 || hasHeaderAppeared) {
+    hasHeaderAppeared = true;
     header.classList.add("is-visible");
-  } else {
-    header.classList.remove("is-visible", "is-menu-open");
-    menuToggle.setAttribute("aria-expanded", "false");
   }
 };
 
